@@ -1,0 +1,55 @@
+from datetime import datetime
+from time import sleep
+from plyer import notification
+
+# Predefined festivals
+festivals = {
+    "Diwali": "2025-10-20",
+    "Christmas": "2025-12-25",
+    "Pongal": "2025-01-14"
+}
+
+def check_festivals():
+    today = datetime.now().date()
+    for name, date_str in festivals.items():
+        fest_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        days_left = (fest_date - today).days
+
+        if days_left == 0:
+            notify(f"🎉 Today is {name}!")
+        elif 0 < days_left <= 3:
+            notify(f"⏰ Reminder: {name} is in {days_left} day(s)!")
+
+def notify(message):
+    notification.notify(
+        title="Festival Reminder Bot",
+        message=message,
+        timeout=5
+    )
+
+def add_festival():
+    name = input("Enter festival name: ")
+    date_str = input("Enter date (YYYY-MM-DD): ")
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")  # validate format
+        festivals[name] = date_str
+        print("Festival added!")
+    except ValueError:
+        print("Invalid date format. Please try again.")
+
+def main():
+    while True:
+        print("\n1. Check Reminders\n2. Add Festival\n3. Exit")
+        choice = input("Enter choice: ")
+        if choice == '1':
+            check_festivals()
+        elif choice == '2':
+            add_festival()
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice.")
+        sleep(1)
+
+if __name__ == "__main__":
+    main()
